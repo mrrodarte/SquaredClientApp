@@ -4,9 +4,9 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
-using TylerTechClientApp.Entities;
+using SquaredClientApp.Entities;
 
-namespace TylerTechClientApp.Contexts
+namespace SquaredClientApp.Contexts
 {
     public class EmployeeContext : DbContext
     {

@@ -8,12 +8,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using TylerTechClientApp.Contexts;
-using TylerTechClientApp.Entities;
-using TylerTechClientApp.Models;
-using TylerTechClientApp.Services;
+using SquaredClientApp.Contexts;
+using SquaredClientApp.Entities;
+using SquaredClientApp.Models;
+using SquaredClientApp.Services;
 
-namespace TylerTechClientApp
+namespace SquaredClientApp
 {
     public partial class EmployeeMaintenance : Form
     {

@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using TylerTechClientApp.Contexts;
-using TylerTechClientApp.Services;
+using SquaredClientApp.Contexts;
+using SquaredClientApp.Services;
 
-namespace TylerTechClientApp
+namespace SquaredClientApp
 {
     static class Program
     {

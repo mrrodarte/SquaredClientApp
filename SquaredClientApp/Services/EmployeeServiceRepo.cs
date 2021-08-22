@@ -3,11 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using TylerTechClientApp.Contexts;
-using TylerTechClientApp.Entities;
-using TylerTechClientApp.Models;
+using SquaredClientApp.Contexts;
+using SquaredClientApp.Entities;
+using SquaredClientApp.Models;
 
-namespace TylerTechClientApp.Services
+namespace SquaredClientApp.Services
 {
     /// <summary>
     /// This is the employee service class where you perform query operations to retrieve data
@@ -23,17 +23,21 @@ namespace TylerTechClientApp.Services
 
         public List<EmployeeToDisplay> GetManagerEmployees()
         {
-            var Result = _context.Employees.Include(a => a.EmployeeRoles)
-                                        .ThenInclude(x => x.Role)
-                                        .SelectMany(er => er.EmployeeRoles)
-                                        .Select(c => new EmployeeToDisplay
-                                        {
-                                            Id = c.EmployeeId,
-                                            FirstName = c.Employee.FirstName,
-                                            LastName = c.Employee.LastName,
-                                            IsManagerRole = c.Role.IsManagerRole,
-                                            RoleDescription = c.Role.RoleDescription
-                                        }).Where(i => i.IsManagerRole == true).ToList();
+            //This is what is to be fed to combobox selector
+            //We need to include all relationships to get to the manager role flag
+            //so we can filter and only display managers
+            var Result = _context.Employees
+                .Include(a => a.EmployeeRoles)
+                .ThenInclude(x => x.Role)
+                .SelectMany(er => er.EmployeeRoles)
+                .Select(c => new EmployeeToDisplay
+                {
+                    Id = c.EmployeeId,
+                    FirstName = c.Employee.FirstName,
+                    LastName = c.Employee.LastName,
+                    IsManagerRole = c.Role.IsManagerRole,
+                    RoleDescription = c.Role.RoleDescription
+                }).Where(i => i.IsManagerRole == true).ToList();
 
             return Result;
 
@@ -54,37 +58,43 @@ namespace TylerTechClientApp.Services
 
         }
 
-        public IEnumerable<EmployeeToDisplay> GetEmployeesByManager(int id)
+        public IEnumerable<EmployeeToDisplayGroup> GetEmployeesByManager(int id)
         {
             //return an empty list if no id is passed
             if (id == 0)
-                return new List<EmployeeToDisplay>();
+                return new List<EmployeeToDisplayGroup>();
 
-            var Result = _context.Employees.Where(i => i.ReportsTo == id).Include(a => a.EmployeeRoles)
-                                        .ThenInclude(x => x.Role)
-                                        .SelectMany(er => er.EmployeeRoles)
-                                        .Select(c => new EmployeeToDisplay
-                                        {
-                                            Id = c.EmployeeId,
-                                            FirstName = c.Employee.FirstName,
-                                            LastName = c.Employee.LastName,
-                                            RoleDescription = c.Role.RoleDescription,
-                                            IsManagerRole = c.Role.IsManagerRole
-                                        }).ToList();
+            // This is the object that is to be displayed on grid, flattened with the necesary fields
+            var Result = _context.Employees
+                .Where(i => i.ReportsTo == id).Include(a => a.EmployeeRoles)
+                .ThenInclude(x => x.Role)
+                .SelectMany(er => er.EmployeeRoles)
+                .Select(c => new EmployeeToDisplay
+                {
+                    Id = c.EmployeeId,
+                    FirstName = c.Employee.FirstName,
+                    LastName = c.Employee.LastName,
+                    RoleDescription = c.Role.RoleDescription,
+                })
+                .AsEnumerable()
+                .GroupBy(
+                        e => new
+                        {
+                            e.Id,
+                            e.FirstName,
+                            e.LastName
+                        },
+                        e => e.RoleDescription,
+                        (key, g) => new EmployeeToDisplayGroup 
+                        {
+                            Id = key.Id,
+                            FirstName = key.FirstName,
+                            LastName = key.LastName,
+                            RoleDescription = string.Join(",", g.ToArray())
+                        })
+                .ToList();
 
-            //left this commented for testing reference
-            //IEnumerable<Employee> rawEmployeeList = _context.Employees.Include(c => c.Role).Where(c => c.ReportsTo == id).ToList();
-
-            //IEnumerable<EmployeeToDisplay> employeeResult = rawEmployeeList
-            //                                .Select(emp => new EmployeeToDisplay 
-            //                                {
-            //                                    Id = emp.Id, 
-            //                                    LastName =  emp.LastName,
-            //                                    FirstName = emp.FirstName, 
-            //                                    RoleDescription = emp.Role.RoleDescription 
-            //                                }).ToList();
-
-            return Result; //new List<EmployeeToDisplay>();//employeeResult;
+            return Result; 
         }
 
         public IEnumerable<Role> GetAllRoles()
@@ -102,14 +112,6 @@ namespace TylerTechClientApp.Services
             _context.SaveChanges();
 
             return employee.EmployeeId;
-
-            //employee.EmployeeRoles.Add(new EmployeeRole
-            //{
-            //    EmployeeId = employee.EmployeeId,
-            //    RoleId=1
-            //});
-
-            //_context.Employees.Add(employee);
         }
 
         public void AddEmployeeRoles(EmployeeRole[] employeeRole)

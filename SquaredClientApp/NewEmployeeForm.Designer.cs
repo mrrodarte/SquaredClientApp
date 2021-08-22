@@ -1,5 +1,5 @@
 ﻿
-namespace TylerTechClientApp
+namespace SquaredClientApp
 {
     partial class NewEmployeeForm
     {

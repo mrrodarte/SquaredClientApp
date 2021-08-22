@@ -6,11 +6,11 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using TylerTechClientApp.Entities;
-using TylerTechClientApp.Models;
-using TylerTechClientApp.Services;
+using SquaredClientApp.Entities;
+using SquaredClientApp.Models;
+using SquaredClientApp.Services;
 
-namespace TylerTechClientApp
+namespace SquaredClientApp
 {
     public partial class NewEmployeeForm : Form
     {

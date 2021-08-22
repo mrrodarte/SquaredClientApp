@@ -5,10 +5,10 @@ using System.Text;
 namespace SquaredClientApp.Models
 {
     /// <summary>
-    /// We will use this class to display employees
+    /// We will use this class to display distinct employees and flatten the roles
     /// not all fields from entity needs to display.  Easier to manage this way.
     /// </summary>
-    public class EmployeeToDisplay
+    public class EmployeeToDisplayGroup
     {
         public int Id { get; set; }
 
@@ -18,6 +18,5 @@ namespace SquaredClientApp.Models
 
         public string RoleDescription { get; set; }
 
-        public bool IsManagerRole { get; set; }
     }
 }

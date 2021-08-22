@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using TylerTechClientApp.Entities;
-using TylerTechClientApp.Models;
+using SquaredClientApp.Entities;
+using SquaredClientApp.Models;
 
-namespace TylerTechClientApp.Services
+namespace SquaredClientApp.Services
 {
     /// <summary>
     /// This is the interface we will use to define our repo class.
@@ -13,7 +13,7 @@ namespace TylerTechClientApp.Services
     {
         List<EmployeeToDisplay> GetManagerEmployees();
 
-        IEnumerable<EmployeeToDisplay> GetEmployeesByManager(int id);
+        IEnumerable<EmployeeToDisplayGroup> GetEmployeesByManager(int id);
 
         IEnumerable<Role> GetAllRoles();
         

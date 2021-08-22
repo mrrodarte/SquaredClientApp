@@ -4,10 +4,10 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using TylerTechClientApp.Contexts;
-using TylerTechClientApp.Services;
+using SquaredClientApp.Contexts;
+using SquaredClientApp.Services;
 
-namespace TylerTechClientApp
+namespace SquaredClientApp
 {
     public class Startup
     {
