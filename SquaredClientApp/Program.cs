@@ -5,32 +5,58 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SquaredClientApp.Contexts;
-using SquaredClientApp.Services;
+using SquaredClientApp.Shared;
+using Microsoft.Extensions.Logging;
+using System.Threading;
 
 namespace SquaredClientApp
 {
-    static class Program
+    public class Program
     {
+        static ILogger<Program> logger;
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
-            IServiceCollection services = new ServiceCollection();
-            // Startup.cs finally :)
-            Startup startup = new Startup();
-            startup.ConfigureServices(services);
-            IServiceProvider serviceProvider = services.BuildServiceProvider();
-
-            serviceProvider.GetService<EmployeeContext>().ConfigureAwait(true);
-
             
+            IServiceCollection services = new ServiceCollection();
+
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new EmployeeMaintenance(serviceProvider.GetService<IEmployeeServiceRepo>()));
+
+            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+
+            //moved to a shared class GetNewService
+            //Startup startup = new Startup();
+            //startup.ConfigureServices(services);
+            //IServiceProvider serviceProvider = services.BuildServiceProvider();
+
+            GetNewService.GetService<EmployeeContext>().ConfigureAwait(true);
+            logger = GetNewService.GetRequiredService<ILogger<Program>>();
+
+
+            //exception handle here for all forms
+            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+
+            // Add the event handler for handling UI thread exceptions to the event.
+            Application.ThreadException += new ThreadExceptionEventHandler(EmployeeMaintenance.HandleUIThreadException);
+
+            // Add the event handler for handling non-UI thread exceptions to the event.
+            AppDomain.CurrentDomain.UnhandledException +=
+                new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+
+            
+            var employeeMaintForm = GetNewService.GetRequiredService<EmployeeMaintenance>();
+            Application.Run(employeeMaintForm);  
         }
 
+        //All non UI exceptions for the whole application will be handled here
+        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            logger.LogError((Exception) e.ExceptionObject, "Errors occurred check the log details.");
+        }
     }
 }

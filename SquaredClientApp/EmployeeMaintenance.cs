@@ -1,39 +1,36 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+﻿using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using SquaredClientApp.Contexts;
-using SquaredClientApp.Entities;
 using SquaredClientApp.Models;
 using SquaredClientApp.Services;
+using SquaredClientApp.Shared;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
+using System.Threading;
 
 namespace SquaredClientApp
 {
     public partial class EmployeeMaintenance : Form
     {
         private readonly IEmployeeServiceRepo _employeeService;
+        static ILogger _logger;
 
         //Inject dependency employee repository
-        public EmployeeMaintenance(IEmployeeServiceRepo employeeServiceRepo)
+        public EmployeeMaintenance(IEmployeeServiceRepo employeeServiceRepo, ILogger<EmployeeMaintenance> logger)
         {
             InitializeComponent();
             _employeeService = employeeServiceRepo ?? throw new ArgumentNullException(nameof(employeeServiceRepo));
+            _logger = logger;
         }
 
         //Load the initial form and data
         private void Form1_Load(object sender, EventArgs e)
         {
+            toolTip1.SetToolTip(btnRefresh, "Refresh Data");
+
             cboEmployees.DataSource = _employeeService.GetManagerEmployees();
             cboEmployees.DisplayMember = "FirstName";
-            cboEmployees.ValueMember = "Id";
-
-            toolTip1.SetToolTip(btnRefresh, "Refresh Data");
+            cboEmployees.ValueMember = "Id";            
         }
 
         //Format the employee combo box to display employee like LastName, FirstName
@@ -53,13 +50,21 @@ namespace SquaredClientApp
 
         private void btnAddNewEmp_Click(object sender, EventArgs e)
         {
-            NewEmployeeForm newEmployeeForm = new NewEmployeeForm(_employeeService);
-            newEmployeeForm.ShowDialog();
+            var newForm = GetNewService.GetRequiredService<NewEmployeeForm>();
+            newForm.ShowDialog();
         }
 
         private void btnRefresh_Click(object sender, EventArgs e)
         {
             cboEmployees.DataSource = _employeeService.GetManagerEmployees();
+        }
+
+        //we will handle all forms UI thread unhandled exceptions here to log them in one place
+        public static void HandleUIThreadException(object sender, ThreadExceptionEventArgs t)
+        {
+            MessageBox.Show("Errors occurred check the log details or contact support.", "S-Squared", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            _logger.LogError(t.Exception, "Errors occurred check the log details.");
+            Application.Exit();
         }
     }
 }

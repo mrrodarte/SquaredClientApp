@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using SquaredClientApp.Contexts;
 using SquaredClientApp.Services;
+using Microsoft.Extensions.Logging;
 
 namespace SquaredClientApp
 {
@@ -33,31 +34,33 @@ namespace SquaredClientApp
             });
 
             //register Expenses repository
-            services.AddScoped<IEmployeeServiceRepo, EmployeeServiceRepo>();
-         
+            services.AddLogging(configure => configure.AddEventLog())
+                    .AddScoped<IEmployeeServiceRepo, EmployeeServiceRepo>()
+                    .AddScoped<EmployeeMaintenance>()
+                    .AddScoped<NewEmployeeForm>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        //public void Configure(EmployeeContext expenseContext)
-        //{
-        //    //if (env.IsDevelopment())
-        //    //{
-        //    //    app.UseDeveloperExceptionPage();
-        //    //}
+        //This method gets called by the runtime.Use this method to configure the HTTP request pipeline.
+        public void Configure(EmployeeContext expenseContext)
+        {
+            //if (env.IsDevelopment())
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //}
 
-        //    //expenseContext.Database.Migrate();
-        //    expenseContext.Database.EnsureCreated();
+            //expenseContext.Database.Migrate();
+            //expenseContext.Database.EnsureCreated();
 
-        //    //app.UseRouting();
+            //app.UseRouting();
 
-        //    //app.UseAuthorization();
+            //app.UseAuthorization();
 
-        //    //app.UseEndpoints(endpoints =>
-        //    //{
-        //    //    endpoints.MapControllers();
-        //    //});
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapControllers();
+            //});
 
 
-        //}
+        }
     }
 }
