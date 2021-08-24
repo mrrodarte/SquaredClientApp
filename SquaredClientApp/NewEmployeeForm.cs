@@ -118,25 +118,20 @@ namespace SquaredClientApp
         /// <returns>New employee Id generated</returns>
         private int AddEmployee()
         {
-           
-                //debug test 
-                throw new ArgumentNullException("Test Exception Halt.");
+            //Validate fields
+            if (!ValidateData())
+                return 0;
 
-                //Validate fields
-                if (!ValidateData())
-                    return 0;
+            //instantiate new employee
+            Employee newEmployee = new Employee
+            {
+                FirstName = txtFirstName.Text,
+                LastName = txtLastName.Text,
+                ReportsTo = (int)cboNewEmpManager.SelectedValue,
+            };
 
-                //instantiate new employee
-                Employee newEmployee = new Employee
-                {
-                    FirstName = txtFirstName.Text,
-                    LastName = txtLastName.Text,
-                    ReportsTo = (int)cboNewEmpManager.SelectedValue,
-                };
-
-                //Get new created employeeid
-                return _employeeService.AddEmployee(newEmployee);
-            
+            //Get new created employeeid
+            return _employeeService.AddEmployee(newEmployee);
         }
 
         private bool ValidateData()
