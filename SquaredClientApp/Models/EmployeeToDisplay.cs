@@ -5,7 +5,7 @@ using System.Text;
 namespace SquaredClientApp.Models
 {
     /// <summary>
-    /// We will use this class to display employees
+    /// We will use this class to display employee managers to combo box
     /// not all fields from entity needs to display.  Easier to manage this way.
     /// </summary>
     public class EmployeeToDisplay

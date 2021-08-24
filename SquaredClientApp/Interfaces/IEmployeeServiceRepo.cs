@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using SquaredClientApp.Entities;
 using SquaredClientApp.Models;
 
-namespace SquaredClientApp.Services
+namespace SquaredClientApp.Interfaces
 {
     /// <summary>
     /// This is the interface we will use to define our repo class.

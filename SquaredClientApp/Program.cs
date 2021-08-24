@@ -29,7 +29,7 @@ namespace SquaredClientApp
 
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
 
-            //moved to a shared class GetNewService
+            //used in several places so moved to a shared class GetNewService
             //Startup startup = new Startup();
             //startup.ConfigureServices(services);
             //IServiceProvider serviceProvider = services.BuildServiceProvider();
@@ -38,7 +38,7 @@ namespace SquaredClientApp
             logger = GetNewService.GetRequiredService<ILogger<Program>>();
 
 
-            //exception handle here for all forms
+            //exception handle here for the whole application
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
 
             // Add the event handler for handling UI thread exceptions to the event.

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using SquaredClientApp.Entities;
 using SquaredClientApp.Models;
 using SquaredClientApp.Services;
+using SquaredClientApp.Interfaces;
 
 namespace SquaredClientApp
 {
@@ -99,6 +100,9 @@ namespace SquaredClientApp
                 }
         }
 
+        /// <summary>
+        /// Clears the input fields for a new entry.
+        /// </summary>
         private void ClearInputFields()
         {
             cboNewEmpManager.SelectedIndex = 1;
@@ -113,16 +117,16 @@ namespace SquaredClientApp
         }
 
         /// <summary>
-        /// Add Employee resource first so we get the new employee id
+        /// Adds a new employee resource.
         /// </summary>
-        /// <returns>New employee Id generated</returns>
+        /// <returns>The employee id of the newly created resource.</returns>
         private int AddEmployee()
         {
             //Validate fields
             if (!ValidateData())
                 return 0;
 
-            //instantiate new employee
+            //instantiate new employee class
             Employee newEmployee = new Employee
             {
                 FirstName = txtFirstName.Text,
@@ -130,10 +134,14 @@ namespace SquaredClientApp
                 ReportsTo = (int)cboNewEmpManager.SelectedValue,
             };
 
-            //Get new created employeeid
+            //Add and return the new employee id
             return _employeeService.AddEmployee(newEmployee);
         }
 
+        /// <summary>
+        /// Validate entry data.
+        /// </summary>
+        /// <returns></returns>
         private bool ValidateData()
         {
             if (string.IsNullOrEmpty(txtFirstName.Text.Trim()))

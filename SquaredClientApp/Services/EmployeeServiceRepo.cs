@@ -6,6 +6,7 @@ using System.Text;
 using SquaredClientApp.Contexts;
 using SquaredClientApp.Entities;
 using SquaredClientApp.Models;
+using SquaredClientApp.Interfaces;
 
 namespace SquaredClientApp.Services
 {
@@ -58,13 +59,18 @@ namespace SquaredClientApp.Services
 
         }
 
+        /// <summary>
+        /// Get a ienumerable collection of employees that report to a manager.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public IEnumerable<EmployeeToDisplayGroup> GetEmployeesByManager(int id)
         {
             //return an empty list if no id is passed
             if (id == 0)
                 return new List<EmployeeToDisplayGroup>();
 
-            // This is the object that is to be displayed on grid, flattened with the necesary fields
+            // This is the object that is to be displayed on grid, distinct and flattened (roles comma separated in one field)
             var Result = _context.Employees
                 .Where(i => i.ReportsTo == id).Include(a => a.EmployeeRoles)
                 .ThenInclude(x => x.Role)
@@ -97,6 +103,10 @@ namespace SquaredClientApp.Services
             return Result; 
         }
 
+        /// <summary>
+        /// Get a list of all roles.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<Role> GetAllRoles()
         {
             return _context.Roles.Select(c => new Role
@@ -106,6 +116,11 @@ namespace SquaredClientApp.Services
             });
         }
 
+        /// <summary>
+        /// Adds the employee resource.
+        /// </summary>
+        /// <param name="employee"></param>
+        /// <returns>The employee id of the newly created resource.</returns>
         public int AddEmployee(Employee employee)
         {
             _context.Employees.Add(employee);
@@ -114,6 +129,10 @@ namespace SquaredClientApp.Services
             return employee.EmployeeId;
         }
 
+        /// <summary>
+        /// Add role ids related to an employee
+        /// </summary>
+        /// <param name="employeeRole"></param>
         public void AddEmployeeRoles(EmployeeRole[] employeeRole)
         {
             _context.EmployeeRoles.AddRange(employeeRole);

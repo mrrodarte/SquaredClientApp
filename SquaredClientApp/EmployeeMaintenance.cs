@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Windows.Forms;
 using SquaredClientApp.Models;
-using SquaredClientApp.Services;
+using SquaredClientApp.Interfaces;
 using SquaredClientApp.Shared;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
@@ -48,12 +48,22 @@ namespace SquaredClientApp
             grdEmployees.DataSource = _employeeService.GetEmployeesByManager(((EmployeeToDisplay)cboEmployees.SelectedItem).Id).ToList();
         }
 
+        /// <summary>
+        /// Open the add new employee form.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnAddNewEmp_Click(object sender, EventArgs e)
         {
             var newForm = GetNewService.GetRequiredService<NewEmployeeForm>();
             newForm.ShowDialog();
         }
 
+        /// <summary>
+        /// Refresh for new data added.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnRefresh_Click(object sender, EventArgs e)
         {
             cboEmployees.DataSource = _employeeService.GetManagerEmployees();

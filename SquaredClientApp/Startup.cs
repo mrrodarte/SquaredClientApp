@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using SquaredClientApp.Contexts;
 using SquaredClientApp.Services;
+using SquaredClientApp.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace SquaredClientApp
@@ -33,7 +34,7 @@ namespace SquaredClientApp
                 o.UseSqlite(connectionString); // "Data Source=Database\\Expenses.db"
             });
 
-            //register Expenses repository
+            //register dependencies for injection
             services.AddLogging(configure => configure.AddEventLog())
                     .AddScoped<IEmployeeServiceRepo, EmployeeServiceRepo>()
                     .AddScoped<EmployeeMaintenance>()
@@ -41,26 +42,9 @@ namespace SquaredClientApp
         }
 
         //This method gets called by the runtime.Use this method to configure the HTTP request pipeline.
-        public void Configure(EmployeeContext expenseContext)
+        public void Configure()
         {
-            //if (env.IsDevelopment())
-            //{
-            //    app.UseDeveloperExceptionPage();
-            //}
-
-            //expenseContext.Database.Migrate();
-            //expenseContext.Database.EnsureCreated();
-
-            //app.UseRouting();
-
-            //app.UseAuthorization();
-
-            //app.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.MapControllers();
-            //});
-
-
+           
         }
     }
 }

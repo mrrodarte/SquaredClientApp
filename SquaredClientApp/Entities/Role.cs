@@ -20,10 +20,5 @@ namespace SquaredClientApp.Entities
         public string RoleDescription { get; set; }
 
         public ICollection<EmployeeRole> EmployeeRoles { get; set; }
-
-        //[ForeignKey("RoleId")]
-        //public EmployeeRole EmployeeRole { get; set; }
-
-        //public virtual ICollection<Employee> Employees { get; set; }
     }
 }
