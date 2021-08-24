@@ -1,5 +1,5 @@
 # SquaredClientApp
-Demo WinForms application in .net core 3.1 that handles a simple Employee Maintenance Form for the purpose of showing knowledge of C# language and object oriented design and fundamentals.
+Demo WinForms application in .NET Core 3.1 that handles a simple Employee Maintenance Form for the purpose of showing knowledge of C# language and object oriented design and fundamentals.
 
 # Database
 The App is self contained with a light database (sqlite) for demo purposes.  The database will be built and seeded with some data on the app folder location when the app runs the first time.  
