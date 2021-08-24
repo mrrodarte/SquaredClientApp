@@ -56,6 +56,7 @@ namespace SquaredClientApp
         private void btnAddNewEmp_Click(object sender, EventArgs e)
         {
             var newForm = GetNewService.GetRequiredService<NewEmployeeForm>();
+            newForm.selectedEmployeeIndex = cboEmployees.SelectedIndex;
             newForm.ShowDialog();
         }
 
@@ -66,7 +67,10 @@ namespace SquaredClientApp
         /// <param name="e"></param>
         private void btnRefresh_Click(object sender, EventArgs e)
         {
+            //preserve current mgr selection
+            int selectedEmpIndex = cboEmployees.SelectedIndex;
             cboEmployees.DataSource = _employeeService.GetManagerEmployees();
+            cboEmployees.SelectedIndex = selectedEmpIndex;
         }
 
         //we will handle all forms UI thread unhandled exceptions here to log them in one place

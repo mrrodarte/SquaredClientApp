@@ -23,33 +23,34 @@ namespace SquaredClientApp
             _logger = logger;
         }
 
+        //public property to preserve the manager selection when adding new employees
+        public int selectedEmployeeIndex { get; set; }
+
         private void NewEmployeeForm_Load(object sender, EventArgs e)
         {
-            
-                //Fill manager combo box selector 
-                cboNewEmpManager.DataSource = _employeeService.GetManagerEmployees();
-                cboNewEmpManager.DisplayMember = "FirstName";
-                cboNewEmpManager.ValueMember = "Id";
+            //Fill manager combo box selector 
+            cboNewEmpManager.DataSource = _employeeService.GetManagerEmployees();
+            cboNewEmpManager.DisplayMember = "FirstName";
+            cboNewEmpManager.ValueMember = "Id";
+            cboNewEmpManager.SelectedIndex = this.selectedEmployeeIndex;
 
+            //Fill the listView with roles
+            foreach (var roleItem in _employeeService.GetAllRoles().ToList())
+            {
+                ListViewItem lvItem = new ListViewItem();
+                lvItem.Text = roleItem.RoleDescription;
+                lvItem.Tag = roleItem.RoleId;
 
-                //Fill the listView with roles
-                foreach (var roleItem in _employeeService.GetAllRoles().ToList())
-                {
-                    ListViewItem lvItem = new ListViewItem();
-                    lvItem.Text = roleItem.RoleDescription;
-                    lvItem.Tag = roleItem.RoleId;
+                //we can pass more complex object in tag for more than one value
+                //new Dictionary<int, bool>()
+                //    {
+                //        { roleItem.RoleId,roleItem.IsManagerRole }
+                //    };
 
-                    //we can pass more complex object in tag for more than one value
-                    //new Dictionary<int, bool>()
-                    //    {
-                    //        { roleItem.RoleId,roleItem.IsManagerRole }
-                    //    };
+                lstRoles.Items.Add(lvItem);
+            }
 
-                    lstRoles.Items.Add(lvItem);
-                }
-
-                cboNewEmpManager.Focus();
-            
+            cboNewEmpManager.Focus();
         }
 
         private void cboNewEmpManager_Format(object sender, ListControlConvertEventArgs e)
@@ -87,17 +88,17 @@ namespace SquaredClientApp
         {
             int employeeId;
             
-                employeeId = AddEmployee();
+            employeeId = AddEmployee();
 
-                if (employeeId > 0)
-                {
-                    AddEmployeeRoles(employeeId);
-                    ClearInputFields();
+            if (employeeId > 0)
+            {
+                AddEmployeeRoles(employeeId);
+                ClearInputFields();
 
-                    toolStripStatusLabel1.Text = "Record Added Successfully.";
+                toolStripStatusLabel1.Text = "Record Added Successfully.";
 
-                    cboNewEmpManager.Focus();
-                }
+                cboNewEmpManager.Focus();
+            }
         }
 
         /// <summary>
@@ -131,7 +132,7 @@ namespace SquaredClientApp
             {
                 FirstName = txtFirstName.Text,
                 LastName = txtLastName.Text,
-                ReportsTo = (int)cboNewEmpManager.SelectedValue,
+                ReportsTo = (int?)cboNewEmpManager.SelectedValue,
             };
 
             //Add and return the new employee id
